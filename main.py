@@ -4,7 +4,7 @@
 # ═══════════════════════════════════════════════════════════════════
 # Creator: RAJSARASWATI JATAV
 # Team: RAJSARASWATI JATAV CYBER CREW
-# GitHub: https://github.com/rajsaraswatijatav
+# GitHub: https://github.com/RAJSARASWATI-JATAV
 # Telegram: https://t.me/rajsaraswatijatav
 # Instagram: @official_rajsaraswati_jatav
 # YouTube: @RajsaraswatiJatav
