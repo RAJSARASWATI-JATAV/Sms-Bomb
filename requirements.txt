@@ -8,3 +8,7 @@ progress
 scikit-learn
 numpy
 colorama
+
+# v9.0 Quantum Edition Dependencies
+asyncio
+typing-extensions
