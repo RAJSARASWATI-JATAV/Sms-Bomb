@@ -6,7 +6,7 @@ import time
 
 from config import settings
 from database import init_db, close_db
-from routers import auth, campaigns, apis, dashboard, monitoring
+from routers import auth, campaigns, apis, dashboard, monitoring, websocket
 from task_manager import cleanup_task_manager
 
 
@@ -99,6 +99,7 @@ app.include_router(campaigns.router, prefix="/api/v1")
 app.include_router(apis.router, prefix="/api/v1")
 app.include_router(dashboard.router, prefix="/api/v1")
 app.include_router(monitoring.router, prefix="/api/v1")
+app.include_router(websocket.router, prefix="/api/v1")
 
 
 if __name__ == "__main__":

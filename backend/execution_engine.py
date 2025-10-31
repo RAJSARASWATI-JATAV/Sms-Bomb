@@ -24,6 +24,14 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Import WebSocket event emitter
+try:
+    from websocket_manager import get_event_emitter
+    WEBSOCKET_ENABLED = True
+except ImportError:
+    WEBSOCKET_ENABLED = False
+    logger.warning("WebSocket support not available")
+
 
 class RateLimiter:
     """Rate limiter for API requests"""
@@ -255,6 +263,20 @@ class CampaignExecutor:
             
             logger.info(f"Starting campaign {campaign_id}: {campaign.name}")
             
+            # Emit WebSocket event
+            if WEBSOCKET_ENABLED:
+                try:
+                    emitter = get_event_emitter()
+                    await emitter.emit_campaign_started(campaign_id, {
+                        "name": campaign.name,
+                        "mode": campaign.mode.value,
+                        "target_count": campaign.target_count,
+                        "waves": campaign.waves,
+                        "started_at": campaign.started_at.isoformat()
+                    })
+                except Exception as e:
+                    logger.error(f"Error emitting WebSocket event: {e}")
+            
             # Get active APIs
             apis = await self._get_active_apis()
             
@@ -313,6 +335,21 @@ class CampaignExecutor:
                 f"{campaign.successful_requests}/{campaign.total_requests} successful "
                 f"({campaign.success_rate:.2f}%)"
             )
+            
+            # Emit WebSocket event
+            if WEBSOCKET_ENABLED:
+                try:
+                    emitter = get_event_emitter()
+                    await emitter.emit_campaign_completed(campaign_id, {
+                        "total_requests": campaign.total_requests,
+                        "successful_requests": campaign.successful_requests,
+                        "failed_requests": campaign.failed_requests,
+                        "success_rate": campaign.success_rate,
+                        "duration_seconds": campaign.duration_seconds,
+                        "completed_at": campaign.completed_at.isoformat()
+                    })
+                except Exception as e:
+                    logger.error(f"Error emitting WebSocket event: {e}")
         
         except Exception as e:
             logger.error(f"Error executing campaign {campaign_id}: {e}")
@@ -383,6 +420,24 @@ class CampaignExecutor:
             ) * 100
         
         await self.db.commit()
+        
+        # Emit progress update via WebSocket
+        if WEBSOCKET_ENABLED:
+            try:
+                emitter = get_event_emitter()
+                total_expected = campaign.target_count * campaign.waves
+                progress = (campaign.total_requests / total_expected * 100) if total_expected > 0 else 0
+                
+                await emitter.emit_campaign_progress(campaign_id, {
+                    "progress_percentage": round(progress, 2),
+                    "total_requests": campaign.total_requests,
+                    "successful_requests": campaign.successful_requests,
+                    "failed_requests": campaign.failed_requests,
+                    "success_rate": round(campaign.success_rate, 2),
+                    "current_wave": wave_num
+                })
+            except Exception as e:
+                logger.error(f"Error emitting progress update: {e}")
     
     async def _send_sms_and_log(
         self,

@@ -127,3 +127,26 @@ async def authenticate_user(db: AsyncSession, username: str, password: str) -> O
         return None
     
     return user
+
+
+async def get_current_user_ws(token: str, db: AsyncSession) -> Optional[User]:
+    """Get current user for WebSocket connections"""
+    try:
+        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+        user_id: int = payload.get("sub")
+        token_type: str = payload.get("type")
+        
+        if user_id is None or token_type != "access":
+            return None
+        
+        # Get user from database
+        result = await db.execute(select(User).where(User.id == user_id))
+        user = result.scalar_one_or_none()
+        
+        if user is None or not user.is_active:
+            return None
+        
+        return user
+    
+    except JWTError:
+        return None

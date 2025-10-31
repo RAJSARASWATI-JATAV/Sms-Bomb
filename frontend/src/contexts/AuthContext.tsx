@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { authAPI, type User } from '@/lib/api';
+import wsClient from '@/lib/websocket';
 
 interface AuthContextType {
   user: User | null;
@@ -25,6 +26,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const response = await authAPI.getCurrentUser();
         setUser(response.data);
+        
+        // Connect WebSocket
+        try {
+          await wsClient.connect(token);
+          console.log('✅ WebSocket connected on auth check');
+        } catch (error) {
+          console.error('Failed to connect WebSocket:', error);
+        }
       } catch (error) {
         localStorage.removeItem('access_token');
       }
@@ -34,14 +43,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (username: string, password: string) => {
     const response = await authAPI.login({ username, password });
-    localStorage.setItem('access_token', response.data.access_token);
+    const token = response.data.access_token;
+    localStorage.setItem('access_token', token);
     const userResponse = await authAPI.getCurrentUser();
     setUser(userResponse.data);
+    
+    // Connect WebSocket
+    try {
+      await wsClient.connect(token);
+      console.log('✅ WebSocket connected on login');
+    } catch (error) {
+      console.error('Failed to connect WebSocket:', error);
+    }
   };
 
   const logout = () => {
     localStorage.removeItem('access_token');
     setUser(null);
+    
+    // Disconnect WebSocket
+    wsClient.disconnect();
+    console.log('🔌 WebSocket disconnected on logout');
+    
     window.location.href = '/login';
   };
 
