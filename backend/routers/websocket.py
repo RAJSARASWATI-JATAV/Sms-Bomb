@@ -3,7 +3,7 @@ WebSocket Router - Phase 5
 Handles WebSocket connections and real-time communication
 """
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends, Query
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends, Query, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 import json
@@ -128,8 +128,19 @@ async def websocket_endpoint(
 
 
 @router.get("/stats")
-async def get_websocket_stats(current_user: User = Depends(get_current_user_ws)):
+async def get_websocket_stats(
+    token: str = Query(...),
+    db: AsyncSession = Depends(get_db)
+):
     """Get WebSocket connection statistics"""
+    # Authenticate user
+    current_user = await get_current_user_ws(token, db)
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials"
+        )
+    
     manager = get_connection_manager()
     
     return {
