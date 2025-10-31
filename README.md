@@ -79,7 +79,7 @@ pkg install git wget python -y
 
 **Clone the repository:**
 ```bash
-git clone https://github.com/rajsaraswatijatav/Sms-Bomb
+git clone https://github.com/RAJSARASWATI-JATAV/Sms-Bomb
 ```
 
 **Navigate to directory:**
@@ -101,7 +101,7 @@ python3 main.py
 
 **Clone the repository:**
 ```bash
-git clone https://github.com/rajsaraswatijatav/Sms-Bomb
+git clone https://github.com/RAJSARASWATI-JATAV/Sms-Bomb
 cd Sms-Bomb
 ```
 

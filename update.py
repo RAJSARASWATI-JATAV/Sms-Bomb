@@ -57,7 +57,7 @@ system('rm -rf main.py' if name != 'nt' else 'del /f main.py 2>nul')
 sleep(0.2)
 
 print(f"{cy}[>>]{w} Downloading latest version...{reset}")
-system('wget https://raw.githubusercontent.com/rajsaraswatijatav/Sms-Bomb/main/main.py' if name != 'nt' else 'curl -o main.py https://raw.githubusercontent.com/rajsaraswatijatav/Sms-Bomb/main/main.py')
+system('wget https://raw.githubusercontent.com/RAJSARASWATI-JATAV/Sms-Bomb/main/main.py' if name != 'nt' else 'curl -o main.py https://raw.githubusercontent.com/RAJSARASWATI-JATAV/Sms-Bomb/main/main.py')
 sleep(0.5)
 
 print(f"\n{g}[✓]{w} Script Updated Successfully!{reset}")
