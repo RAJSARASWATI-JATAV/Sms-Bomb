@@ -91,7 +91,7 @@ export function ApiStatus() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-neon-green">{activeCount}</div>
-            <p className="text-xs text-text-secondary mt-1">{((activeCount / apiData.length) * 100).toFixed(0)}% operational</p>
+            <p className="text-xs text-text-secondary mt-1">{apis.length > 0 ? ((activeCount / apis.length) * 100).toFixed(0) : 0}% operational</p>
           </CardContent>
         </Card>
 
@@ -136,62 +136,70 @@ export function ApiStatus() {
           </div>
 
           <div className="space-y-3">
-            {filteredApis.map((api) => (
-              <div
-                key={api.name}
-                className="p-4 rounded-lg bg-dark-elevated hover:bg-dark-elevated/80 transition-colors border border-neon-blue/10"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                      api.status === 'active' ? 'bg-neon-green/10' :
-                      api.status === 'checking' ? 'bg-neon-blue/10' :
-                      'bg-error/10'
-                    }`}>
-                      {api.status === 'active' && <CheckCircle2 className="w-5 h-5 text-neon-green" />}
-                      {api.status === 'checking' && <Clock className="w-5 h-5 text-neon-blue animate-pulse" />}
-                      {api.status === 'inactive' && <XCircle className="w-5 h-5 text-error" />}
+            {filteredApis.length > 0 ? (
+              filteredApis.map((api) => (
+                <div
+                  key={api.id}
+                  className="p-4 rounded-lg bg-dark-elevated hover:bg-dark-elevated/80 transition-colors border border-neon-blue/10"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                        api.status === 'active' && api.is_enabled ? 'bg-neon-green/10' :
+                        api.status === 'rate_limited' ? 'bg-neon-orange/10' :
+                        'bg-error/10'
+                      }`}>
+                        {api.status === 'active' && api.is_enabled && <CheckCircle2 className="w-5 h-5 text-neon-green" />}
+                        {api.status === 'rate_limited' && <Clock className="w-5 h-5 text-neon-orange" />}
+                        {(api.status === 'inactive' || api.status === 'error' || !api.is_enabled) && <XCircle className="w-5 h-5 text-error" />}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-text-primary">{api.name}</h3>
+                        <p className="text-xs text-text-muted">
+                          Response: {(api.avg_response_time_ms / 1000).toFixed(2)}s
+                          {api.provider && ` • ${api.provider}`}
+                          {api.country && ` • ${api.country}`}
+                        </p>
+                      </div>
+                    </div>
+                    <Badge variant={
+                      api.status === 'active' && api.is_enabled ? 'default' :
+                      api.status === 'rate_limited' ? 'secondary' :
+                      'destructive'
+                    }>
+                      {api.is_enabled ? api.status : 'disabled'}
+                    </Badge>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 mb-3">
+                    <div>
+                      <p className="text-xs text-text-muted">Success</p>
+                      <p className="text-sm font-semibold text-neon-green">{api.successful_requests}</p>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-text-primary">{api.name}</h3>
-                      <p className="text-xs text-text-muted">
-                        Response: {api.responseTime}s
-                      </p>
+                      <p className="text-xs text-text-muted">Failed</p>
+                      <p className="text-sm font-semibold text-error">{api.failed_requests}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-text-muted">Success Rate</p>
+                      <p className="text-sm font-semibold text-neon-blue">{api.success_rate.toFixed(1)}%</p>
                     </div>
                   </div>
-                  <Badge variant={
-                    api.status === 'active' ? 'default' :
-                    api.status === 'checking' ? 'secondary' :
-                    'destructive'
-                  }>
-                    {api.status}
-                  </Badge>
-                </div>
 
-                <div className="grid grid-cols-3 gap-4 mb-3">
                   <div>
-                    <p className="text-xs text-text-muted">Success</p>
-                    <p className="text-sm font-semibold text-neon-green">{api.success}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-text-muted">Failed</p>
-                    <p className="text-sm font-semibold text-error">{api.failed}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-text-muted">Success Rate</p>
-                    <p className="text-sm font-semibold text-neon-blue">{api.rate}%</p>
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-text-muted">Performance</span>
+                      <span className="text-neon-blue">{api.success_rate.toFixed(1)}%</span>
+                    </div>
+                    <Progress value={api.success_rate} className="h-2" />
                   </div>
                 </div>
-
-                <div>
-                  <div className="flex justify-between text-xs mb-1">
-                    <span className="text-text-muted">Performance</span>
-                    <span className="text-neon-blue">{api.rate}%</span>
-                  </div>
-                  <Progress value={api.rate} className="h-2" />
-                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-text-muted">
+                <p>No APIs found</p>
               </div>
-            ))}
+            )}
           </div>
         </CardContent>
       </Card>

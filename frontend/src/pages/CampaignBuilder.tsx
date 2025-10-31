@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
@@ -17,7 +16,6 @@ import {
   Shield, 
   Rocket, 
   Brain,
-  Upload,
   Play,
   Pause,
   AlertCircle,
@@ -59,7 +57,7 @@ export function CampaignBuilder() {
       }
 
       // Create campaign
-      const response = await campaignAPI.create({
+      await campaignAPI.create({
         name: campaignName,
         description: description || undefined,
         mode,

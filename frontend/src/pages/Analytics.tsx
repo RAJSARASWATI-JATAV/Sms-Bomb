@@ -13,7 +13,6 @@ import {
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  Legend,
   ResponsiveContainer
 } from 'recharts'
 import { Download, TrendingUp, Target, Zap } from 'lucide-react'
@@ -166,7 +165,7 @@ export function Analytics() {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      label={(entry: any) => `${entry.name} ${(entry.percent * 100).toFixed(0)}%`}
                       outerRadius={120}
                       fill="#8884d8"
                       dataKey="value"
