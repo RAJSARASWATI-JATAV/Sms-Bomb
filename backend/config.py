@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
+from pydantic import field_validator
 
 
 class Settings(BaseSettings):
@@ -32,10 +33,20 @@ class Settings(BaseSettings):
     refresh_token_expire_days: int = 7
     
     # CORS
-    cors_origins: List[str] = ["http://localhost:5173", "http://localhost:3000"]
+    cors_origins: str | List[str] = "http://localhost:5173,http://localhost:3000"
     cors_credentials: bool = True
-    cors_methods: List[str] = ["*"]
-    cors_headers: List[str] = ["*"]
+    cors_methods: str | List[str] = "*"
+    cors_headers: str | List[str] = "*"
+    
+    @field_validator('cors_origins', 'cors_methods', 'cors_headers', mode='before')
+    @classmethod
+    def parse_cors_values(cls, v):
+        """Parse comma-separated CORS values into lists"""
+        if isinstance(v, str):
+            if v == "*":
+                return ["*"]
+            return [item.strip() for item in v.split(',') if item.strip()]
+        return v
     
     # Rate Limiting
     rate_limit_per_minute: int = 60
