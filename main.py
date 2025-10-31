@@ -734,10 +734,10 @@ def print_about():
     """Display about information"""
     about = f"""{c.NEON_GREEN}
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║                      ABOUT SMS-POWERBOMB v7.0                             ║
+║                      ABOUT SMS-POWERBOMB v8.0                             ║
 ╠═══════════════════════════════════════════════════════════════════════════╣
 ║  {c.WHITE}Tool Name:{c.NEON_ORANGE} SMS-PowerBomb Ultimate AI Domination{c.NEON_GREEN}                       ║
-║  {c.WHITE}Version:{c.NEON_ORANGE} 8.0 - AI Domination Edition (5x Faster){c.NEON_GREEN}                     ║
+║  {c.WHITE}Version:{c.NEON_ORANGE} 8.0 - ULTIMATE AI DOMINATION EDITION{c.NEON_GREEN}                        ║
 ║  {c.WHITE}Creator:{c.NEON_PINK} RAJSARASWATI JATAV{c.NEON_GREEN}                                             ║
 ║  {c.WHITE}Team:{c.NEON_PINK} RAJSARASWATI JATAV CYBER CREW{c.NEON_GREEN}                                 ║
 ║  {c.WHITE}Purpose:{c.CYAN} Educational SMS Automation & Security Research{c.NEON_GREEN}                ║
