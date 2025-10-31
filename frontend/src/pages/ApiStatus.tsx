@@ -1,34 +1,58 @@
+import { useEffect, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { CheckCircle2, XCircle, Clock, Search, RefreshCw } from 'lucide-react'
-import { useState } from 'react'
-
-const apiData = [
-  { name: 'OLA', status: 'active', success: 156, failed: 12, rate: 92.8, responseTime: 1.2 },
-  { name: 'Paytm', status: 'active', success: 203, failed: 8, rate: 96.2, responseTime: 0.9 },
-  { name: 'Flipkart', status: 'active', success: 189, failed: 15, rate: 92.6, responseTime: 1.5 },
-  { name: 'Amazon', status: 'inactive', success: 45, failed: 67, rate: 40.2, responseTime: 3.2 },
-  { name: 'Zomato', status: 'active', success: 178, failed: 9, rate: 95.2, responseTime: 1.1 },
-  { name: 'Swiggy', status: 'active', success: 167, failed: 11, rate: 93.8, responseTime: 1.3 },
-  { name: 'PhonePe', status: 'active', success: 198, failed: 7, rate: 96.6, responseTime: 0.8 },
-  { name: 'MakeMyTrip', status: 'checking', success: 0, failed: 0, rate: 0, responseTime: 0 },
-  { name: 'Myntra', status: 'active', success: 145, failed: 13, rate: 91.8, responseTime: 1.4 },
-  { name: 'BigBasket', status: 'active', success: 134, failed: 16, rate: 89.3, responseTime: 1.6 },
-]
+import { apiGatewayAPI, type APIGateway } from '@/lib/api'
 
 export function ApiStatus() {
   const [searchTerm, setSearchTerm] = useState('')
+  const [apis, setApis] = useState<APIGateway[]>([])
+  const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
 
-  const filteredApis = apiData.filter(api =>
-    api.name.toLowerCase().includes(searchTerm.toLowerCase())
+  useEffect(() => {
+    loadApis()
+  }, [])
+
+  const loadApis = async () => {
+    try {
+      const response = await apiGatewayAPI.getAll({ limit: 100 })
+      setApis(response.data)
+    } catch (error) {
+      console.error('Failed to load APIs:', error)
+    } finally {
+      setLoading(false)
+      setRefreshing(false)
+    }
+  }
+
+  const handleRefresh = () => {
+    setRefreshing(true)
+    loadApis()
+  }
+
+  const filteredApis = apis.filter(api =>
+    api.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    api.provider?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    api.country?.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const activeCount = apiData.filter(api => api.status === 'active').length
-  const inactiveCount = apiData.filter(api => api.status === 'inactive').length
-  const avgSuccessRate = (apiData.reduce((acc, api) => acc + api.rate, 0) / apiData.length).toFixed(1)
+  const activeCount = apis.filter(api => api.status === 'active' && api.is_enabled).length
+  const inactiveCount = apis.filter(api => api.status !== 'active' || !api.is_enabled).length
+  const avgSuccessRate = apis.length > 0 
+    ? (apis.reduce((acc, api) => acc + api.success_rate, 0) / apis.length).toFixed(1)
+    : '0.0'
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="w-8 h-8 border-4 border-neon-blue border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -38,8 +62,13 @@ export function ApiStatus() {
           <h1 className="heading-lg text-neon-purple">API Status</h1>
           <p className="text-text-secondary mt-1">Monitor health and performance of all SMS gateways</p>
         </div>
-        <Button variant="outline" className="gap-2">
-          <RefreshCw className="w-4 h-4" />
+        <Button 
+          variant="outline" 
+          className="gap-2"
+          onClick={handleRefresh}
+          disabled={refreshing}
+        >
+          <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
           Refresh All
         </Button>
       </div>
@@ -51,7 +80,7 @@ export function ApiStatus() {
             <CardTitle className="text-sm font-medium text-text-secondary">Total APIs</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-text-primary">{apiData.length}</div>
+            <div className="text-2xl font-bold text-text-primary">{apis.length}</div>
             <p className="text-xs text-neon-blue mt-1">Configured gateways</p>
           </CardContent>
         </Card>

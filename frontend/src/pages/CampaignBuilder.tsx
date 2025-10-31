@@ -161,6 +161,37 @@ export function CampaignBuilder() {
             </CardContent>
           </Card>
 
+          {/* Campaign Details */}
+          <Card className="glass border-neon-blue/20">
+            <CardHeader>
+              <CardTitle className="text-neon-purple">Campaign Details</CardTitle>
+              <CardDescription>Basic campaign information</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="campaign-name">Campaign Name *</Label>
+                <Input
+                  id="campaign-name"
+                  placeholder="My Campaign"
+                  className="mt-2 bg-dark-elevated border-neon-blue/30"
+                  value={campaignName}
+                  onChange={(e) => setCampaignName(e.target.value)}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="campaign-description">Description (Optional)</Label>
+                <Textarea
+                  id="campaign-description"
+                  placeholder="Campaign description..."
+                  className="mt-2 bg-dark-elevated border-neon-blue/30"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Mode Selection */}
           <Card className="glass border-neon-blue/20">
             <CardHeader>
@@ -278,17 +309,27 @@ export function CampaignBuilder() {
                     Use multiple proxies for stealth
                   </p>
                 </div>
-                <Switch />
+                <Switch checked={useProxy} onCheckedChange={setUseProxy} />
               </div>
 
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>AI Optimization</Label>
+                  <Label>VPN Protection</Label>
                   <p className="text-xs text-text-muted mt-1">
-                    Let AI optimize the campaign
+                    Route through VPN servers
                   </p>
                 </div>
-                <Switch defaultChecked />
+                <Switch checked={useVPN} onCheckedChange={setUseVPN} />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Randomize API Selection</Label>
+                  <p className="text-xs text-text-muted mt-1">
+                    Random API gateway selection
+                  </p>
+                </div>
+                <Switch checked={randomizeAPIs} onCheckedChange={setRandomizeAPIs} />
               </div>
             </CardContent>
           </Card>
@@ -335,13 +376,31 @@ export function CampaignBuilder() {
               <CardTitle className="text-neon-pink">Launch Campaign</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button className="w-full bg-gradient-to-r from-neon-pink to-neon-orange hover:opacity-90 text-dark font-semibold">
-                <Play className="w-4 h-4 mr-2" />
-                Start Bombing
+              <Button 
+                className="w-full bg-gradient-to-r from-neon-pink to-neon-orange hover:opacity-90 text-dark font-semibold"
+                onClick={handleLaunch}
+                disabled={isLoading || success}
+              >
+                {isLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-dark border-t-transparent rounded-full animate-spin mr-2" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-4 h-4 mr-2" />
+                    Create Campaign
+                  </>
+                )}
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => navigate('/')}
+                disabled={isLoading}
+              >
                 <Pause className="w-4 h-4 mr-2" />
-                Save as Draft
+                Cancel
               </Button>
             </CardContent>
           </Card>
