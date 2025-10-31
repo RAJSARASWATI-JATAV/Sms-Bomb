@@ -16,7 +16,7 @@
 
 ## 🌟 [ABOUT THIS TOOL]
 
-**SMS-PowerBomb v5.0** - A powerful SMS automation tool created by **RAJSARASWATI JATAV**, passionate **Ethical Hacker**, **Cyberpunk OSINT Specialist**, and **Python3 Automation Architect**.
+**SMS-PowerBomb v6.0 ULTIMATE EDITION** - A next-level powerful SMS automation tool created by **RAJSARASWATI JATAV**, passionate **Ethical Hacker**, **Cyberpunk OSINT Specialist**, and **Python3 Automation Architect**.
 
 ### 🌟 [VISION]
 
@@ -36,12 +36,17 @@
 ## 🚀 Features
 
 - **Unlimited SMS Bombing** (Indian Numbers Only)
+- **15+ Working APIs** - Constantly updated and maintained
 - **Cross Platform** - Works on Termux, Linux, Windows
-- **No Balance Deduction** - Free to use
-- **Working APIs** - Constantly updated
-- **All Operators Supported** - Works with all carriers
-- **Custom SMS Support** - Personalize your messages
-- **High Speed** - Optimized performance
+- **No Balance Deduction** - 100% Free to use
+- **All Operators Supported** - Works with all Indian carriers
+- **High-Speed Async Operations** - Lightning fast performance
+- **Real-time Tracking** - Success/Failure monitoring
+- **Cyberpunk UI** - Beautiful neon-themed interface
+- **Smart Phone Validation** - Validates numbers before bombing
+- **Configurable Delays** - Control bombing speed
+- **API Status Checker** - Check which APIs are active
+- **Clean Code** - No obfuscation, fully readable
 
 ---
 
@@ -57,7 +62,8 @@
 ## 🛠️ Tech Stack
 
 - **Python3** - Core automation engine
-- **Async/Await** - High-performance requests
+- **Async/Await** - High-performance concurrent requests
+- **aiohttp** - Asynchronous HTTP client library
 - **Termux Compatible** - Mobile hacking ready
 - **Cross-Platform** - Linux, Windows, Android
 
@@ -153,6 +159,8 @@ python3 main.py
 - ✅ Kali Linux
 - ✅ Ubuntu/Debian
 - ✅ Windows 10/11
+- ✅ Windows PowerShell
+- ✅ Git Bash
 
 ---
 
@@ -174,6 +182,7 @@ Download the latest Termux app from F-Droid:
 - **Telegram:** [t.me/rajsaraswatijatav](https://t.me/rajsaraswatijatav) 
 - **Instagram:** [@official_rajsaraswati_jatav](https://instagram.com/official_rajsaraswati_jatav)
 - **YouTube:** [@RajsaraswatiJatav](https://www.youtube.com/@RajsaraswatiJatav)
+- **GitHub:** [github.com/RAJSARASWATI-JATAV](https://github.com/RAJSARASWATI-JATAV)
 - **Location:** INDIA (Matrix Layer)
 - **Status:** Next-Level Hacker | Always Upgrading
 
@@ -222,7 +231,23 @@ Apache 2.0 © RAJSARASWATI JATAV
 
 ## 🔥 Version
 
-**v5.0 SMS-PowerBomb** - Enhanced by RAJSARASWATI JATAV
+**v6.0 SMS-PowerBomb ULTIMATE EDITION** - Enhanced by RAJSARASWATI JATAV
+
+### What's New in v6.0 ULTIMATE:
+- ✨ Complete rewrite with clean, readable code
+- ⚡ 15+ working APIs (increased from 10)
+- 🎨 Cyberpunk UI with neon colors
+- 🚀 High-speed async/await operations
+- 📊 Real-time success/failure tracking
+- 🛡️ Smart phone number validation
+- ⚙️ Configurable delay between waves
+- 🔍 API status checker
+- 💪 Better error handling
+- 🎯 Wave-by-wave progress display
+- 📈 Detailed bombing summary
+- 🌈 Beautiful color-coded output
+- ⏱️ Timestamp for each wave
+- 🎭 Enhanced user experience
 
 ---
 
@@ -230,4 +255,9 @@ Apache 2.0 © RAJSARASWATI JATAV
   <b>☠️ RAJSARASWATI JATAV | POWERFUL ETHICAL HACKER ☠️</b>
   <br>
   <i>Transforming digital boundaries with unstoppable power & ethical coding</i>
+  <br><br>
+  <img src="https://img.shields.io/badge/Version-6.0%20ULTIMATE-brightgreen?style=for-the-badge" alt="Version">
+  <img src="https://img.shields.io/badge/Python-3.7+-blue?style=for-the-badge&logo=python" alt="Python">
+  <img src="https://img.shields.io/badge/Platform-Cross--Platform-orange?style=for-the-badge" alt="Platform">
+  <img src="https://img.shields.io/badge/License-Apache%202.0-red?style=for-the-badge" alt="License">
 </div>
