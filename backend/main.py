@@ -6,7 +6,8 @@ import time
 
 from config import settings
 from database import init_db, close_db
-from routers import auth, campaigns, apis, dashboard
+from routers import auth, campaigns, apis, dashboard, monitoring
+from task_manager import cleanup_task_manager
 
 
 @asynccontextmanager
@@ -21,6 +22,9 @@ async def lifespan(app: FastAPI):
     
     # Shutdown
     print("🛑 Shutting down...")
+    print("⏹️  Stopping background tasks...")
+    await cleanup_task_manager()
+    print("✅ Background tasks stopped")
     await close_db()
     print("✅ Database connections closed")
 
@@ -94,6 +98,7 @@ app.include_router(auth.router, prefix="/api/v1")
 app.include_router(campaigns.router, prefix="/api/v1")
 app.include_router(apis.router, prefix="/api/v1")
 app.include_router(dashboard.router, prefix="/api/v1")
+app.include_router(monitoring.router, prefix="/api/v1")
 
 
 if __name__ == "__main__":

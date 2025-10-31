@@ -11,6 +11,7 @@ from schemas import (
     CampaignLogResponse, SuccessResponse
 )
 from auth import get_current_user
+from task_manager import get_task_manager
 
 router = APIRouter(prefix="/campaigns", tags=["Campaigns"])
 
@@ -195,7 +196,15 @@ async def start_campaign(
     await db.commit()
     await db.refresh(campaign)
     
-    # TODO: Trigger campaign execution in background
+    # Start campaign execution in background
+    task_manager = get_task_manager()
+    success = await task_manager.start_campaign(campaign.id)
+    
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to start campaign execution"
+        )
     
     return campaign
 
@@ -312,3 +321,106 @@ async def get_campaign_logs(
     logs = result.scalars().all()
     
     return logs
+
+
+@router.get("/{campaign_id}/status")
+async def get_campaign_execution_status(
+    campaign_id: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get real-time execution status of a campaign"""
+    
+    # Verify campaign belongs to user
+    result = await db.execute(
+        select(Campaign).where(
+            Campaign.id == campaign_id,
+            Campaign.user_id == current_user.id
+        )
+    )
+    campaign = result.scalar_one_or_none()
+    
+    if not campaign:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Campaign not found"
+        )
+    
+    # Check if running in background
+    task_manager = get_task_manager()
+    is_running = task_manager.is_running(campaign_id)
+    
+    # Calculate progress
+    progress = 0.0
+    if campaign.target_count > 0 and campaign.waves > 0:
+        total_expected = campaign.target_count * campaign.waves
+        progress = (campaign.total_requests / total_expected) * 100 if total_expected > 0 else 0
+    
+    # Estimate time remaining
+    time_remaining = None
+    if campaign.started_at and campaign.total_requests > 0:
+        elapsed = (datetime.utcnow() - campaign.started_at).total_seconds()
+        rate = campaign.total_requests / elapsed if elapsed > 0 else 0
+        
+        if rate > 0:
+            total_expected = campaign.target_count * campaign.waves
+            remaining_requests = total_expected - campaign.total_requests
+            time_remaining = int(remaining_requests / rate)
+    
+    return {
+        "campaign_id": campaign.id,
+        "status": campaign.status,
+        "is_running": is_running,
+        "progress_percentage": round(progress, 2),
+        "total_requests": campaign.total_requests,
+        "successful_requests": campaign.successful_requests,
+        "failed_requests": campaign.failed_requests,
+        "success_rate": round(campaign.success_rate, 2),
+        "started_at": campaign.started_at,
+        "estimated_time_remaining_seconds": time_remaining,
+        "current_wave": min(
+            int(campaign.total_requests / campaign.target_count) + 1 if campaign.target_count > 0 else 1,
+            campaign.waves
+        ),
+        "total_waves": campaign.waves
+    }
+
+
+@router.get("/running/list")
+async def get_running_campaigns(
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get list of currently running campaigns"""
+    
+    task_manager = get_task_manager()
+    running_ids = task_manager.get_running_campaigns()
+    
+    # Get campaign details
+    if running_ids:
+        result = await db.execute(
+            select(Campaign).where(
+                Campaign.id.in_(running_ids),
+                Campaign.user_id == current_user.id
+            )
+        )
+        campaigns = result.scalars().all()
+    else:
+        campaigns = []
+    
+    return {
+        "count": len(campaigns),
+        "campaigns": [
+            {
+                "id": c.id,
+                "name": c.name,
+                "status": c.status,
+                "progress": round(
+                    (c.total_requests / (c.target_count * c.waves) * 100)
+                    if c.target_count > 0 and c.waves > 0 else 0,
+                    2
+                )
+            }
+            for c in campaigns
+        ]
+    }
