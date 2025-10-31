@@ -41,6 +41,16 @@ except ImportError:
     AI_ENABLED = False
     print("⚠️ AI modules not found. Running in legacy mode.")
 
+# Import v8.5 enhanced features
+try:
+    from enhanced_features import (
+        FavoritesManager, NetworkChecker, QuickModeConfig,
+        ConfigManager, LoadingSpinner, ErrorHelper, QuickStats
+    )
+    ENHANCED_FEATURES = True
+except ImportError:
+    ENHANCED_FEATURES = False
+
 # ═══════════════════════════════════════════════════════════════════
 # CYBERPUNK COLOR SCHEME - RAJSARASWATI JATAV SIGNATURE STYLE
 # ═══════════════════════════════════════════════════════════════════
