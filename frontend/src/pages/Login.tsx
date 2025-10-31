@@ -1,22 +1,35 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Zap, Shield, Lock } from 'lucide-react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Zap, Shield, Lock, AlertCircle } from 'lucide-react'
 
 export function Login() {
   const navigate = useNavigate()
+  const { login } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    setTimeout(() => {
+    setError('')
+
+    try {
+      await login(username, password)
       navigate('/')
-    }, 1000)
+    } catch (err: any) {
+      setError(err.response?.data?.detail || 'Login failed. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -44,12 +57,21 @@ export function Login() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
+            {error && (
+              <Alert variant="destructive" className="bg-error/10 border-error/30">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
             <div>
               <Label htmlFor="username">Username</Label>
               <Input
                 id="username"
                 placeholder="Enter your username"
                 className="mt-2 bg-dark-elevated border-neon-blue/30"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
               />
             </div>
@@ -61,6 +83,8 @@ export function Login() {
                 type="password"
                 placeholder="Enter your password"
                 className="mt-2 bg-dark-elevated border-neon-blue/30"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>

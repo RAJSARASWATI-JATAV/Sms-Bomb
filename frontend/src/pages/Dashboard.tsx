@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -13,49 +14,93 @@ import {
   ArrowRight
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { dashboardAPI, type DashboardStats, type Campaign } from '@/lib/api'
 
 export function Dashboard() {
-  const stats = [
+  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [recentCampaigns, setRecentCampaigns] = useState<Campaign[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    loadDashboardData()
+  }, [])
+
+  const loadDashboardData = async () => {
+    try {
+      const [statsRes, campaignsRes] = await Promise.all([
+        dashboardAPI.getStats(),
+        dashboardAPI.getRecentCampaigns(5)
+      ])
+      setStats(statsRes.data)
+      setRecentCampaigns(campaignsRes.data)
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="w-8 h-8 border-4 border-neon-blue border-t-transparent rounded-full animate-spin" />
+      </div>
+    )
+  }
+
+  const statCards = stats ? [
     {
       title: 'Total Campaigns',
-      value: '1,247',
-      change: '+12.5%',
+      value: stats.total_campaigns.toLocaleString(),
+      change: `${stats.completed_campaigns} completed`,
       icon: Target,
       color: 'text-neon-blue',
       bgColor: 'bg-neon-blue/10'
     },
     {
       title: 'Success Rate',
-      value: '96.8%',
-      change: '+2.3%',
+      value: `${stats.success_rate.toFixed(1)}%`,
+      change: stats.active_campaigns > 0 ? `${stats.active_campaigns} active` : 'No active campaigns',
       icon: TrendingUp,
       color: 'text-neon-green',
       bgColor: 'bg-neon-green/10'
     },
     {
       title: 'Active APIs',
-      value: '187/200',
-      change: '93.5%',
+      value: `${stats.active_apis}/${stats.total_apis}`,
+      change: `${((stats.active_apis / stats.total_apis) * 100).toFixed(1)}%`,
       icon: Activity,
       color: 'text-neon-purple',
       bgColor: 'bg-neon-purple/10'
     },
     {
       title: 'SMS Sent Today',
-      value: '45,892',
-      change: '+18.2%',
+      value: stats.sms_sent_today.toLocaleString(),
+      change: `${stats.total_sms_sent.toLocaleString()} total`,
       icon: Zap,
       color: 'text-neon-orange',
       bgColor: 'bg-neon-orange/10'
     },
-  ]
+  ] : []
 
-  const recentCampaigns = [
-    { id: 1, target: '+91 98765 43210', status: 'success', sms: 156, time: '2 mins ago' },
-    { id: 2, target: '+91 87654 32109', status: 'running', sms: 89, time: '5 mins ago' },
-    { id: 3, target: '+91 76543 21098', status: 'success', sms: 203, time: '12 mins ago' },
-    { id: 4, target: '+91 65432 10987', status: 'failed', sms: 45, time: '18 mins ago' },
-  ]
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed': return 'text-neon-green'
+      case 'running': return 'text-neon-blue'
+      case 'paused': return 'text-neon-orange'
+      case 'failed': return 'text-error'
+      default: return 'text-text-secondary'
+    }
+  }
+
+  const getModeColor = (mode: string) => {
+    switch (mode) {
+      case 'turbo': return 'bg-neon-orange/20 text-neon-orange'
+      case 'stealth': return 'bg-neon-purple/20 text-neon-purple'
+      case 'smart': return 'bg-neon-blue/20 text-neon-blue'
+      default: return 'bg-neon-green/20 text-neon-green'
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -75,7 +120,7 @@ export function Dashboard() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat) => (
+        {statCards.map((stat) => (
           <Card key={stat.title} className="glass border-neon-blue/20 hover:glow-blue transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-text-secondary">
@@ -105,38 +150,49 @@ export function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentCampaigns.map((campaign) => (
-                <div
-                  key={campaign.id}
-                  className="flex items-center justify-between p-4 rounded-lg bg-dark-elevated hover:bg-dark-elevated/80 transition-colors"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                      campaign.status === 'success' ? 'bg-neon-green/10' :
-                      campaign.status === 'running' ? 'bg-neon-blue/10' :
-                      'bg-error/10'
-                    }`}>
-                      {campaign.status === 'success' && <CheckCircle2 className="w-5 h-5 text-neon-green" />}
-                      {campaign.status === 'running' && <Clock className="w-5 h-5 text-neon-blue animate-pulse" />}
-                      {campaign.status === 'failed' && <XCircle className="w-5 h-5 text-error" />}
+              {recentCampaigns.length > 0 ? (
+                recentCampaigns.map((campaign) => (
+                  <div
+                    key={campaign.id}
+                    className="flex items-center justify-between p-4 rounded-lg bg-dark-elevated hover:bg-dark-elevated/80 transition-colors"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                        campaign.status === 'completed' ? 'bg-neon-green/10' :
+                        campaign.status === 'running' ? 'bg-neon-blue/10' :
+                        campaign.status === 'failed' ? 'bg-error/10' :
+                        'bg-neon-orange/10'
+                      }`}>
+                        {campaign.status === 'completed' && <CheckCircle2 className="w-5 h-5 text-neon-green" />}
+                        {campaign.status === 'running' && <Clock className="w-5 h-5 text-neon-blue animate-pulse" />}
+                        {campaign.status === 'failed' && <XCircle className="w-5 h-5 text-error" />}
+                        {campaign.status === 'paused' && <Clock className="w-5 h-5 text-neon-orange" />}
+                      </div>
+                      <div>
+                        <p className="font-medium text-text-primary">{campaign.name}</p>
+                        <p className="text-sm text-text-secondary">{campaign.target_count} targets • {campaign.successful_requests} sent</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium text-text-primary">{campaign.target}</p>
-                      <p className="text-sm text-text-secondary">{campaign.sms} SMS sent</p>
+                    <div className="text-right">
+                      <Badge className={getModeColor(campaign.mode)}>
+                        {campaign.mode}
+                      </Badge>
+                      <p className={`text-xs mt-1 ${getStatusColor(campaign.status)}`}>
+                        {campaign.status} • {campaign.success_rate.toFixed(1)}%
+                      </p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <Badge variant={
-                      campaign.status === 'success' ? 'default' :
-                      campaign.status === 'running' ? 'secondary' :
-                      'destructive'
-                    }>
-                      {campaign.status}
-                    </Badge>
-                    <p className="text-xs text-text-muted mt-1">{campaign.time}</p>
-                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-text-muted">
+                  <p>No campaigns yet</p>
+                  <Link to="/campaign">
+                    <Button variant="link" className="text-neon-blue mt-2">
+                      Create your first campaign
+                    </Button>
+                  </Link>
                 </div>
-              ))}
+              )}
             </div>
           </CardContent>
         </Card>

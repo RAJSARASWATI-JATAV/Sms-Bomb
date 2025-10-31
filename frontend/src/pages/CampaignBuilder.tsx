@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -9,6 +10,7 @@ import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { 
   Target, 
   Zap, 
@@ -17,13 +19,70 @@ import {
   Brain,
   Upload,
   Play,
-  Pause
+  Pause,
+  AlertCircle,
+  CheckCircle2
 } from 'lucide-react'
+import { campaignAPI } from '@/lib/api'
 
 export function CampaignBuilder() {
-  const [mode, setMode] = useState('normal')
+  const navigate = useNavigate()
+  const [mode, setMode] = useState<'normal' | 'stealth' | 'turbo' | 'smart'>('normal')
   const [waves, setWaves] = useState([50])
   const [delay, setDelay] = useState([2])
+  const [campaignName, setCampaignName] = useState('')
+  const [description, setDescription] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [bulkTargets, setBulkTargets] = useState('')
+  const [useProxy, setUseProxy] = useState(false)
+  const [useVPN, setUseVPN] = useState(false)
+  const [randomizeAPIs, setRandomizeAPIs] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
+
+  const handleLaunch = async () => {
+    setError('')
+    setSuccess(false)
+    setIsLoading(true)
+
+    try {
+      // Validate inputs
+      if (!campaignName.trim()) {
+        throw new Error('Campaign name is required')
+      }
+
+      const targets = phoneNumber ? [phoneNumber] : bulkTargets.split('\n').filter(t => t.trim())
+      
+      if (targets.length === 0) {
+        throw new Error('At least one target phone number is required')
+      }
+
+      // Create campaign
+      const response = await campaignAPI.create({
+        name: campaignName,
+        description: description || undefined,
+        mode,
+        targets,
+        waves: waves[0],
+        delay_seconds: delay[0],
+        use_proxy: useProxy,
+        use_vpn: useVPN,
+        randomize_apis: randomizeAPIs
+      })
+
+      setSuccess(true)
+      
+      // Redirect to dashboard after 2 seconds
+      setTimeout(() => {
+        navigate('/')
+      }, 2000)
+    } catch (err: any) {
+      setError(err.response?.data?.detail || err.message || 'Failed to create campaign')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -32,6 +91,23 @@ export function CampaignBuilder() {
         <h1 className="heading-lg text-neon-pink">Campaign Builder</h1>
         <p className="text-text-secondary mt-1">Create and launch your SMS bombing campaign</p>
       </div>
+
+      {/* Status Messages */}
+      {error && (
+        <Alert variant="destructive" className="bg-error/10 border-error/30">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {success && (
+        <Alert className="bg-neon-green/10 border-neon-green/30">
+          <CheckCircle2 className="h-4 w-4 text-neon-green" />
+          <AlertDescription className="text-neon-green">
+            Campaign created successfully! Redirecting to dashboard...
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Configuration */}
@@ -56,26 +132,29 @@ export function CampaignBuilder() {
                     <Label htmlFor="phone">Phone Number</Label>
                     <Input
                       id="phone"
-                      placeholder="+91 98765 43210"
+                      placeholder="+1234567890"
                       className="mt-2 bg-dark-elevated border-neon-blue/30"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
                     />
                     <p className="text-xs text-text-muted mt-1">
-                      Enter 10-digit Indian mobile number
+                      Enter phone number with country code
                     </p>
                   </div>
                 </TabsContent>
                 <TabsContent value="bulk" className="space-y-4">
                   <div>
-                    <Label htmlFor="bulk">Upload CSV/Excel</Label>
-                    <div className="mt-2 border-2 border-dashed border-neon-blue/30 rounded-lg p-8 text-center hover:border-neon-blue/50 transition-colors cursor-pointer">
-                      <Upload className="w-8 h-8 text-neon-blue mx-auto mb-2" />
-                      <p className="text-sm text-text-secondary">
-                        Click to upload or drag and drop
-                      </p>
-                      <p className="text-xs text-text-muted mt-1">
-                        CSV or Excel files only
-                      </p>
-                    </div>
+                    <Label htmlFor="bulk">Bulk Phone Numbers</Label>
+                    <Textarea
+                      id="bulk"
+                      placeholder="Enter one phone number per line&#10;+1234567890&#10;+0987654321"
+                      className="mt-2 bg-dark-elevated border-neon-blue/30 min-h-[150px]"
+                      value={bulkTargets}
+                      onChange={(e) => setBulkTargets(e.target.value)}
+                    />
+                    <p className="text-xs text-text-muted mt-1">
+                      Enter one phone number per line (max 1000)
+                    </p>
                   </div>
                 </TabsContent>
               </Tabs>
