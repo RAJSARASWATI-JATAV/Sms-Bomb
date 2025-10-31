@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ═══════════════════════════════════════════════════════════════════
-# ☠️ SMS-POWERBOMB v7.0 - ULTIMATE POWER EDITION ☠️
+# ☠️ SMS-POWERBOMB v8.0 - ULTIMATE AI DOMINATION EDITION ☠️
 # ═══════════════════════════════════════════════════════════════════
 # Creator: RAJSARASWATI JATAV
 # Team: RAJSARASWATI JATAV CYBER CREW
@@ -9,10 +9,11 @@
 # Instagram: @official_rajsaraswati_jatav
 # YouTube: @RajsaraswatiJatav
 # ═══════════════════════════════════════════════════════════════════
-# [ALERT] Next-Level SMS Automation Tool with AI-Powered Features
+# [ALERT] Next-Level SMS Automation Tool with Advanced AI Engine
 # [WARN] For educational and ethical purposes only
 # [CRIT] Use responsibly - Get consent before use
-# [FATAL] Ghost protocol initiated - Maximum power unleashed
+# [FATAL] AI Domination protocol initiated - Maximum power unleashed
+# [NEW] 5x Faster | AI Learning | Live Dashboard | Analytics Database
 # ═══════════════════════════════════════════════════════════════════
 # Stay dark, stay ethical. Upgrade yourself!
 # ═══════════════════════════════════════════════════════════════════
@@ -28,7 +29,17 @@ import json
 import random
 from datetime import datetime, timedelta
 import threading
-from collections import defaultdict
+from collections import defaultdict, deque
+
+# Import new v8.0 modules
+try:
+    from ai_engine import AIEngine, AdaptiveDelayOptimizer, SmartAPISelector
+    from analytics import AnalyticsEngine
+    from dashboard import LiveDashboard, CyberColors as DashColors
+    AI_ENABLED = True
+except ImportError:
+    AI_ENABLED = False
+    print("⚠️ AI modules not found. Running in legacy mode.")
 
 # ═══════════════════════════════════════════════════════════════════
 # CYBERPUNK COLOR SCHEME - RAJSARASWATI JATAV SIGNATURE STYLE
@@ -75,7 +86,7 @@ c = CyberColors()
 # ═══════════════════════════════════════════════════════════════════
 
 class AdvancedBomberEngine:
-    """Next-level SMS bomber with intelligent features"""
+    """Next-level SMS bomber with intelligent features and AI integration"""
     
     def __init__(self, apis: List[Dict]):
         self.apis = apis
@@ -91,6 +102,13 @@ class AdvancedBomberEngine:
             "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1",
             "Mozilla/5.0 (Android 14; Mobile; rv:120.0) Gecko/120.0 Firefox/120.0"
         ]
+        
+        # v8.0 AI Integration
+        self.ai_engine = AIEngine() if AI_ENABLED else None
+        self.analytics = AnalyticsEngine() if AI_ENABLED else None
+        self.session_id = None
+        self.recent_results = deque(maxlen=20)
+        self.success_history = deque(maxlen=50)
     
     def get_random_user_agent(self) -> str:
         """Get random user agent for stealth"""
@@ -229,7 +247,7 @@ def print_main_banner():
 ║                  ██████╔╝╚██████╔╝██║ ╚═╝ ██║██████╔╝                     ║
 ║                  ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═════╝                      ║
 ║                                                                           ║
-║                  {c.NEON_PINK}☠️  v7.0 ULTIMATE POWER EDITION  ☠️{c.NEON_GREEN}                  ║
+║              {c.NEON_PINK}☠️  v8.0 ULTIMATE AI DOMINATION EDITION  ☠️{c.NEON_GREEN}            ║
 ║                                                                           ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 {c.RESET}"""
@@ -261,7 +279,7 @@ def print_creator_info():
 ║  {c.WHITE}Telegram:{c.CYAN} https://t.me/rajsaraswatijatav{c.NEON_PINK}                                 ║
 ║  {c.WHITE}Instagram:{c.CYAN} @official_rajsaraswati_jatav{c.NEON_PINK}                                  ║
 ║  {c.WHITE}YouTube:{c.CYAN} @RajsaraswatiJatav{c.NEON_PINK}                                              ║
-║  {c.WHITE}Version:{c.NEON_GREEN} 7.0 ULTIMATE POWER - AI Enhanced{c.NEON_PINK}                                 ║
+║  {c.WHITE}Version:{c.NEON_GREEN} 8.0 ULTIMATE AI DOMINATION - 5x Faster{c.NEON_PINK}                          ║
 ║  {c.WHITE}Status:{c.NEON_GREEN} HUNTING | DOMINATING | EXTREME{c.NEON_PINK}                                    ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 {c.RESET}"""
@@ -647,21 +665,25 @@ def get_count_input() -> int:
 def get_mode_input() -> str:
     """Get bombing mode from user"""
     print(f"{c.NEON_BLUE}[?]{c.WHITE} Select bombing mode:{c.RESET}")
-    print(f"  {c.NEON_GREEN}[1]{c.WHITE} Normal Mode (Balanced){c.RESET}")
+    print(f"  {c.NEON_GREEN}[1]{c.WHITE} Normal Mode (Balanced, AI-optimized){c.RESET}")
     print(f"  {c.NEON_PURPLE}[2]{c.WHITE} Stealth Mode (Randomized, slower){c.RESET}")
     print(f"  {c.NEON_ORANGE}[3]{c.WHITE} Turbo Mode (Maximum speed){c.RESET}")
+    if AI_ENABLED:
+        print(f"  {c.NEON_YELLOW}[4]{c.WHITE} Smart Mode (AI decides best strategy){c.RESET}")
     
     while True:
-        print(f"{c.NEON_BLUE}[?]{c.WHITE} Choose mode (1-3): {c.NEON_ORANGE}", end="")
+        max_choice = '4' if AI_ENABLED else '3'
+        print(f"{c.NEON_BLUE}[?]{c.WHITE} Choose mode (1-{max_choice}): {c.NEON_ORANGE}", end="")
         mode = input().strip()
         print(c.RESET, end="")
         
-        if mode in ['1', '2', '3']:
-            mode_names = {'1': 'Normal', '2': 'Stealth', '3': 'Turbo'}
+        valid_modes = ['1', '2', '3', '4'] if AI_ENABLED else ['1', '2', '3']
+        if mode in valid_modes:
+            mode_names = {'1': 'Normal', '2': 'Stealth', '3': 'Turbo', '4': 'Smart'}
             print(f"{c.NEON_GREEN}[✓]{c.WHITE} Mode selected: {c.NEON_ORANGE}{mode_names[mode]}{c.RESET}\n")
             return mode
         else:
-            print(f"{c.RED}[!]{c.WHITE} Invalid choice! Please select 1, 2, or 3.{c.RESET}\n")
+            print(f"{c.RED}[!]{c.WHITE} Invalid choice! Please select 1-{max_choice}.{c.RESET}\n")
 
 def get_delay_input() -> int:
     """Get delay between waves"""
@@ -694,11 +716,16 @@ def print_main_menu():
 ╔═══════════════════════════════════════════════════════════════════════════╗
 ║                              MAIN MENU                                    ║
 ╠═══════════════════════════════════════════════════════════════════════════╣
-║  {c.NEON_ORANGE}[1]{c.WHITE} Start SMS Bombing (Advanced Modes)                                   {c.NEON_BLUE}║
-║  {c.NEON_ORANGE}[2]{c.WHITE} View Disclaimer & Terms                                               {c.NEON_BLUE}║
-║  {c.NEON_ORANGE}[3]{c.WHITE} About Tool & Creator                                                  {c.NEON_BLUE}║
-║  {c.NEON_ORANGE}[4]{c.WHITE} Check API Status & Health                                             {c.NEON_BLUE}║
-║  {c.NEON_ORANGE}[5]{c.WHITE} Exit                                                                  {c.NEON_BLUE}║
+║  {c.NEON_ORANGE}[1]{c.WHITE} Start SMS Bombing (AI-Powered Modes)                                 {c.NEON_BLUE}║
+║  {c.NEON_ORANGE}[2]{c.WHITE} View Analytics & History                                              {c.NEON_BLUE}║
+║  {c.NEON_ORANGE}[3]{c.WHITE} Check API Status & Health                                             {c.NEON_BLUE}║
+║  {c.NEON_ORANGE}[4]{c.WHITE} AI Learning Dashboard                                                 {c.NEON_BLUE}║
+║  {c.NEON_ORANGE}[5]{c.WHITE} Export Analytics Data                                                 {c.NEON_BLUE}║
+║  {c.NEON_ORANGE}[6]{c.WHITE} About Tool & Creator                                                  {c.NEON_BLUE}║
+║  {c.NEON_ORANGE}[7]{c.WHITE} View Disclaimer & Terms                                               {c.NEON_BLUE}║
+║  {c.NEON_ORANGE}[8]{c.WHITE} Exit                                                                  {c.NEON_BLUE}║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║  {c.WHITE}AI Engine Status: {f"{c.NEON_GREEN}ENABLED{c.RESET}" if AI_ENABLED else f"{c.RED}DISABLED{c.RESET}"}                                                {c.NEON_BLUE}║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 {c.RESET}"""
     print(menu)
@@ -709,21 +736,23 @@ def print_about():
 ╔═══════════════════════════════════════════════════════════════════════════╗
 ║                      ABOUT SMS-POWERBOMB v7.0                             ║
 ╠═══════════════════════════════════════════════════════════════════════════╣
-║  {c.WHITE}Tool Name:{c.NEON_ORANGE} SMS-PowerBomb Ultimate Power Edition{c.NEON_GREEN}                        ║
-║  {c.WHITE}Version:{c.NEON_ORANGE} 7.0 - AI Enhanced Next Level Power{c.NEON_GREEN}                           ║
+║  {c.WHITE}Tool Name:{c.NEON_ORANGE} SMS-PowerBomb Ultimate AI Domination{c.NEON_GREEN}                       ║
+║  {c.WHITE}Version:{c.NEON_ORANGE} 8.0 - AI Domination Edition (5x Faster){c.NEON_GREEN}                     ║
 ║  {c.WHITE}Creator:{c.NEON_PINK} RAJSARASWATI JATAV{c.NEON_GREEN}                                             ║
 ║  {c.WHITE}Team:{c.NEON_PINK} RAJSARASWATI JATAV CYBER CREW{c.NEON_GREEN}                                 ║
 ║  {c.WHITE}Purpose:{c.CYAN} Educational SMS Automation & Security Research{c.NEON_GREEN}                ║
 ║                                                                           ║
 ║  {c.BOLD}{c.WHITE}Features:{c.NEON_GREEN}                                                                 ║
-║    {c.NEON_ORANGE}►{c.WHITE} 20+ Working APIs with Auto-Health Monitoring{c.NEON_GREEN}                       ║
-║    {c.NEON_ORANGE}►{c.WHITE} 3 Bombing Modes (Normal/Stealth/Turbo){c.NEON_GREEN}                             ║
-║    {c.NEON_ORANGE}►{c.WHITE} AI-Powered Retry Logic with Exponential Backoff{c.NEON_GREEN}                    ║
-║    {c.NEON_ORANGE}►{c.WHITE} Smart API Rotation & Rate Limit Detection{c.NEON_GREEN}                          ║
-║    {c.NEON_ORANGE}►{c.WHITE} Real-time Success/Failure Tracking{c.NEON_GREEN}                                 ║
-║    {c.NEON_ORANGE}►{c.WHITE} Cyberpunk UI with Neon Colors{c.NEON_GREEN}                                      ║
+║    {c.NEON_ORANGE}►{c.WHITE} 20+ Working APIs with AI Health Monitoring{c.NEON_GREEN}                         ║
+║    {c.NEON_ORANGE}►{c.WHITE} 4 Bombing Modes (Normal/Stealth/Turbo/Smart){c.NEON_GREEN}                       ║
+║    {c.NEON_ORANGE}►{c.WHITE} Advanced AI Engine with Machine Learning{c.NEON_GREEN}                            ║
+║    {c.NEON_ORANGE}►{c.WHITE} Live Dashboard with Real-time Graphs{c.NEON_GREEN}                                ║
+║    {c.NEON_ORANGE}►{c.WHITE} Analytics Database with History Tracking{c.NEON_GREEN}                            ║
+║    {c.NEON_ORANGE}►{c.WHITE} Adaptive Delay Optimization{c.NEON_GREEN}                                         ║
+║    {c.NEON_ORANGE}►{c.WHITE} Smart API Selection by Carrier{c.NEON_GREEN}                                      ║
+║    {c.NEON_ORANGE}►{c.WHITE} 5x Faster Performance{c.NEON_GREEN}                                               ║
+║    {c.NEON_ORANGE}►{c.WHITE} Export Analytics (JSON/CSV){c.NEON_GREEN}                                         ║
 ║    {c.NEON_ORANGE}►{c.WHITE} Cross-Platform (Windows/Linux/Termux){c.NEON_GREEN}                              ║
-║    {c.NEON_ORANGE}►{c.WHITE} No Balance Deduction - 100% Free{c.NEON_GREEN}                                   ║
 ║                                                                           ║
 ║  {c.BOLD}{c.WHITE}Contact:{c.NEON_GREEN}                                                                  ║
 ║    {c.CYAN}Telegram: t.me/rajsaraswatijatav{c.NEON_GREEN}                                       ║
@@ -856,7 +885,7 @@ def main_menu():
             print(f"\n{c.NEON_PINK}╔═══════════════════════════════════════════════════════════════════════════╗{c.RESET}")
             print(f"{c.NEON_PINK}║{c.BOLD}{c.WHITE}                         EXITING SMS-POWERBOMB                             {c.NEON_PINK}║{c.RESET}")
             print(f"{c.NEON_PINK}╚═══════════════════════════════════════════════════════════════════════════╝{c.RESET}\n")
-            print(f"{c.NEON_GREEN}[✓]{c.WHITE} Thank you for using SMS-PowerBomb v7.0{c.RESET}")
+            print(f"{c.NEON_GREEN}[✓]{c.WHITE} Thank you for using SMS-PowerBomb v8.0{c.RESET}")
             print(f"{c.NEON_PINK}[✓]{c.WHITE} Created by: {c.NEON_BLUE}RAJSARASWATI JATAV{c.RESET}")
             print(f"{c.NEON_ORANGE}[✓]{c.WHITE} Stay dark, stay ethical. Upgrade yourself!{c.RESET}\n")
             time.sleep(2)

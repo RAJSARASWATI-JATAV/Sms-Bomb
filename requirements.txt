@@ -5,3 +5,6 @@ pwinput
 tqdm
 wget
 progress
+scikit-learn
+numpy
+colorama
