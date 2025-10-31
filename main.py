@@ -1,3 +1,21 @@
+#!/usr/bin/env python3
+# ═══════════════════════════════════════════════════════════════════
+# ☠️ SMS-POWERBOMB v5.0 ☠️
+# ═══════════════════════════════════════════════════════════════════
+# Creator: RAJSARASWATI JATAV
+# Team: RAJSARASWATI JATAV CYBER CREW
+# GitHub: https://github.com/rajsaraswatijatav
+# Telegram: https://t.me/rajsaraswatijatav
+# Instagram: @official_rajsaraswati_jatav
+# YouTube: @RajsaraswatiJatav
+# ═══════════════════════════════════════════════════════════════════
+# [ALERT] Powerful SMS automation tool
+# [WARN] For educational and ethical purposes only
+# [CRIT] Use responsibly - Get consent before use
+# ═══════════════════════════════════════════════════════════════════
+# Stay dark, stay ethical. Upgrade yourself!
+# ═══════════════════════════════════════════════════════════════════
+
 E=' '
 B=''
 A=chr
