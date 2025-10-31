@@ -1,0 +1,44 @@
+{
+  "name": "sms-powerbomb",
+  "version": "10.0.0",
+  "description": "SMS-POWERBOMB v10.0 Ultimate Final Edition - Complete SMS Automation Platform",
+  "private": true,
+  "scripts": {
+    "setup": "bash scripts/setup.sh",
+    "dev": "bash scripts/run-dev.sh",
+    "dev:win": "scripts\\run-dev.bat",
+    "build": "bash scripts/build-all.sh",
+    "deploy": "bash scripts/deploy.sh",
+    "frontend:dev": "cd frontend && npm run dev",
+    "frontend:build": "cd frontend && npm run build",
+    "mobile:android": "cd mobile && npm run android",
+    "mobile:build": "cd mobile && npm run build:apk",
+    "desktop:dev": "cd desktop && npm start",
+    "desktop:build": "cd desktop && npm run build",
+    "docker:up": "docker-compose -f docker/docker-compose.yml up -d",
+    "docker:down": "docker-compose -f docker/docker-compose.yml down",
+    "docker:logs": "docker-compose -f docker/docker-compose.yml logs -f"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RAJSARASWATI-JATAV/Sms-Bomb"
+  },
+  "keywords": [
+    "sms",
+    "automation",
+    "bomber",
+    "ai",
+    "telegram-bot",
+    "react",
+    "fastapi",
+    "electron",
+    "react-native"
+  ],
+  "author": "RAJSARASWATI JATAV",
+  "license": "Apache-2.0",
+  "workspaces": [
+    "frontend",
+    "mobile",
+    "desktop"
+  ]
+}

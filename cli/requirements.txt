@@ -1,0 +1,8 @@
+# SMS-POWERBOMB CLI Dependencies
+requests>=2.31.0
+aiohttp>=3.9.0
+colorama>=0.4.6
+scikit-learn>=1.3.0
+numpy>=1.24.0
+typing-extensions>=4.8.0
+python-dotenv>=1.0.0

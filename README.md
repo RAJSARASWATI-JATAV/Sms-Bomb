@@ -102,35 +102,7 @@
 
 ## 📱 INSTALLATION & USAGE
 
-### For Termux (Android)
-
-**1. Update packages:**
-```bash
-pkg update -y && pkg upgrade -y
-```
-
-**2. Install dependencies:**
-```bash
-pkg install git python -y
-```
-
-**3. Clone the repository:**
-```bash
-git clone https://github.com/RAJSARASWATI-JATAV/Sms-Bomb
-cd Sms-Bomb
-```
-
-**4. Install Python requirements:**
-```bash
-pip install -r requirements.txt
-```
-
-**5. Run the tool:**
-```bash
-python main.py
-```
-
-### For Linux
+### 🚀 Quick Start (All Platforms)
 
 **1. Clone the repository:**
 ```bash
@@ -138,73 +110,176 @@ git clone https://github.com/RAJSARASWATI-JATAV/Sms-Bomb
 cd Sms-Bomb
 ```
 
-**2. Install requirements:**
+**2. Run setup script:**
+
+**Linux/macOS/Termux:**
 ```bash
-pip3 install -r requirements.txt
+chmod +x scripts/setup.sh
+./scripts/setup.sh
 ```
 
-**3. Run the tool:**
+**Windows:**
 ```bash
-python3 main.py
-```
+# Using Git Bash
+bash scripts/setup.sh
 
-### For Windows
-
-**1. Install Python 3.7+** from [python.org](https://www.python.org/downloads/)
-
-**2. Clone the repository:**
-```bash
-git clone https://github.com/RAJSARASWATI-JATAV/Sms-Bomb
-cd Sms-Bomb
-```
-
-**3. Install requirements:**
-```bash
+# Or run manually
+cd cli
 pip install -r requirements.txt
 ```
 
-**4. Run the tool:**
+**3. Start the application:**
+
+**CLI Mode:**
 ```bash
+cd cli
 python main.py
+```
+
+**Web Mode (Full Stack):**
+
+Linux/macOS:
+```bash
+./scripts/run-dev.sh
+```
+
+Windows:
+```bash
+scripts\run-dev.bat
+```
+
+Then open:
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:8000
+- API Docs: http://localhost:8000/docs
+
+**Docker Mode:**
+```bash
+docker-compose -f docker/docker-compose.yml up -d
+```
+
+### 📱 Platform-Specific Installation
+
+#### For Termux (Android)
+```bash
+pkg update -y && pkg upgrade -y
+pkg install git python -y
+git clone https://github.com/RAJSARASWATI-JATAV/Sms-Bomb
+cd Sms-Bomb
+cd cli && pip install -r requirements.txt
+python main.py
+```
+
+#### For Linux
+```bash
+git clone https://github.com/RAJSARASWATI-JATAV/Sms-Bomb
+cd Sms-Bomb
+./scripts/setup.sh
+cd cli && python3 main.py
+```
+
+#### For Windows
+```bash
+# Install Python 3.7+ from python.org
+git clone https://github.com/RAJSARASWATI-JATAV/Sms-Bomb
+cd Sms-Bomb
+cd cli
+pip install -r requirements.txt
+python main.py
+```
+
+#### Mobile App (Android)
+```bash
+cd mobile
+npm install
+npm run build:apk
+# Install: mobile/android/app/build/outputs/apk/release/app-release.apk
+```
+
+#### Desktop App
+```bash
+cd desktop
+npm install
+npm run build
+# Executables in: desktop/dist/
+```
+
+#### Telegram Bot
+```bash
+cd telegram-bot
+pip install -r requirements.txt
+# Configure .env with bot token
+python bot.py
 ```
 
 ---
 
 ## 🎮 HOW TO USE
 
-### Basic Usage:
+### CLI Usage:
 
-1. **Run the tool:**
+1. **Run the CLI tool:**
    ```bash
+   cd cli
    python main.py
    ```
 
-2. **Accept the disclaimer** (type "yes")
+2. **Follow the menu:**
+   - Accept disclaimer
+   - Enter target phone number (10 digits)
+   - Select number of SMS waves (1-100)
+   - Choose bombing mode (Normal/Stealth/Turbo/Smart)
+   - Set delay between waves
+   - Confirm and start!
 
-3. **Enter target phone number** (10 digits, Indian number)
+### Web Dashboard Usage:
 
-4. **Enter number of SMS waves** (1-100)
+1. **Start the web application:**
+   ```bash
+   ./scripts/run-dev.sh  # Linux/macOS
+   scripts\run-dev.bat   # Windows
+   ```
 
-5. **Select bombing mode:**
-   - Normal Mode (Recommended)
-   - Stealth Mode (Slower, more stealthy)
-   - Turbo Mode (Fastest)
-   - Smart Mode (AI decides)
+2. **Open browser:** http://localhost:5173
 
-6. **Set delay between waves** (Normal mode only)
+3. **Features:**
+   - 🎯 Start campaigns with visual interface
+   - 📊 Real-time monitoring dashboard
+   - 📈 Analytics and statistics
+   - 🔧 API health monitoring
+   - 📱 Responsive design
+   - 🔐 User authentication
 
-7. **Confirm and start bombing!**
+### Telegram Bot Usage:
 
-### Menu Options:
+1. **Start the bot:**
+   ```bash
+   cd telegram-bot
+   python bot.py
+   ```
 
-1. **Start SMS Bombing** - Begin bombing operation
-2. **View Analytics & History** - See past sessions
-3. **Check API Status** - View API health
-4. **AI Learning Dashboard** - AI insights
-5. **Export Analytics** - Export data to JSON/CSV
-6. **About Tool** - Tool information
-7. **Disclaimer** - View terms
-8. **Exit** - Close the tool
+2. **Open Telegram and find your bot**
+
+3. **Commands:**
+   - `/start` - Start the bot
+   - `/bomb <phone> <count> [mode]` - Start bombing
+   - `/status` - Check campaign status
+   - `/stop` - Stop active campaign
+   - `/stats` - View statistics
+   - `/help` - Show help
+
+### Mobile App Usage:
+
+1. **Install APK** on Android device
+2. **Open app** and grant permissions
+3. **Start bombing** with touch interface
+4. **Monitor** campaigns in real-time
+
+### Desktop App Usage:
+
+1. **Run executable** for your platform
+2. **Configure** backend URL in settings
+3. **Use** full-featured desktop interface
 
 ---
 
@@ -234,46 +309,64 @@ python main.py
 
 ## 🔥 VERSION HISTORY
 
-### v8.0 - ULTIMATE AI DOMINATION EDITION (Current)
+### v10.0 - ULTIMATE FINAL EDITION (Current)
 **Release Date:** 2024
 
-**Major Features:**
+**🎯 Complete Platform Coverage:**
+- ✅ CLI Application (Enhanced)
+- ✅ Web Dashboard (Full Stack)
+- ✅ Telegram Bot (Complete)
+- ✅ Mobile App (Android)
+- ✅ Desktop App (Cross-platform)
+- ✅ Docker Deployment
+- ✅ Comprehensive Documentation
+
+**🚀 Major Features:**
 - 🧠 Advanced AI Engine with Machine Learning
-- 📊 SQLite Database with Analytics
-- 🎨 Live Dashboard with Real-time Graphs
-- 🤖 Smart Mode (AI-powered bombing)
-- ⚡ 5x Performance Improvement
+- 📊 Real-time Analytics Dashboard
+- 🎨 Modern React Frontend with shadcn UI
+- 🔌 FastAPI Backend with WebSocket
+- 🤖 Full-featured Telegram Bot
+- 📱 React Native Mobile App
+- 🖥️ Electron Desktop App
+- 🐳 Docker Containerization
 - 📈 Success Rate Prediction
 - 🎯 Carrier-based API Selection
 - 🔄 Adaptive Delay Optimization
 - 💾 Export Analytics (JSON/CSV)
-- 📉 Performance Trend Analysis
+- 🔐 User Authentication
+- 📡 Real-time Updates via WebSocket
 
-**Improvements:**
-- 20+ Working APIs (up from 15)
-- 60-70% Success Rate (up from 50%)
-- Enhanced UI with Live Dashboard
-- AI Learning from Every Session
-- Better Error Handling
-- Improved Stealth Mode
-- Cross-platform Compatibility
+**💪 Improvements:**
+- 20+ Working APIs
+- 65-75% Success Rate
+- Unified Codebase
+- Clean Architecture
+- Production-Ready
+- One-Command Deployment
+- Complete Documentation
+- Cross-Platform Support
+
+### v8.0 - ULTIMATE AI DOMINATION EDITION
+- AI Engine with ML
+- Live Dashboard
+- SQLite Analytics
+- 4 Bombing Modes
+- 60-70% Success Rate
 
 ### v7.0 - AI-POWERED EDITION
-- Added AI features
-- 3 bombing modes
-- 15 working APIs
-- Enhanced UI
+- AI Features
+- 3 Bombing Modes
+- 15 Working APIs
 
 ### v6.0 - ULTIMATE EDITION
-- Complete code rewrite
+- Code Rewrite
 - Cyberpunk UI
-- 15 working APIs
-- Clean, readable code
+- Clean Code
 
 ### v5.0 - ORIGINAL
-- Basic SMS bombing
+- Basic SMS Bombing
 - 10 APIs
-- Obfuscated code
 
 ---
 
